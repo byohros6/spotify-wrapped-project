@@ -19,6 +19,7 @@ from .forms import ContactForm
 from django.middleware.locale import LocaleMiddleware
 from django.utils.translation import activate
 from django.http import HttpResponseRedirect
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext as _, get_language
 
@@ -428,8 +429,8 @@ def audio_guess(request):
 
         options = [song['name']] + [random.choice(top_tracks['items'])['name'] for _ in range(3)]
         random.shuffle(options)
-    except Exception as e:
-        return JsonResponse({'error': f'An error occurred while preparing the quiz: {str(e)}'}, status=500)
+    except Exception:
+        return JsonResponse({'error': 'An error occurred while preparing the quiz.'}, status=500)
 
     context = {
         'snippet_url': snippet_url,
@@ -451,10 +452,24 @@ def set_language(request):
     activate(lang_code)
     request.session[LocaleMiddleware.language_cookie_name] = lang_code
     messages.success(request, _("Language changed successfully!"))
-    return redirect(request.META.get('HTTP_REFERER', 'home'))
+    referer = request.META.get('HTTP_REFERER')
+    if referer and url_has_allowed_host_and_scheme(
+        url=referer,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return redirect(referer)
+    return redirect('home')
 
 def change_language(request, lang_code):
     """Switch the website language."""
     activate(lang_code)
     request.session[settings.LANGUAGE_COOKIE_NAME] = lang_code
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    referer = request.META.get('HTTP_REFERER')
+    if referer and url_has_allowed_host_and_scheme(
+        url=referer,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return HttpResponseRedirect(referer)
+    return redirect('home')
