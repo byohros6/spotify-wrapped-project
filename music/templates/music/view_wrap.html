@@ -1,0 +1,364 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link id="theme-stylesheet" rel="stylesheet" href="{% static 'music/light.css' %}">
+    <title>{{ wrap.title }}</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h1 {
+            margin: 10px 0;
+            font-size: 2.2em;
+        }
+
+        /* Slide Container */
+        #slide-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            padding: 10px;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.5s ease-in-out;
+            box-sizing: border-box;
+        }
+        .slide.active {
+            left: 0;
+        }
+        .slide.previous {
+            left: -100%;
+        }
+        .slide h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        .slide ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .slide ul li {
+            margin: 8px 0;
+            font-size: 1.2em;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1em;
+            background: #f1f1f1;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+
+        /* Navigation Buttons */
+         .navigation-buttons {
+        position: relative; /* Change from fixed to relative */
+        bottom: auto; /* Remove bottom positioning */
+        margin: 10px 0;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap; /* Enable wrapping for smaller screens */
+        gap: 15px;
+        justify-content: center; /* Center-align the buttons */
+    }
+        button, a.button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+        }
+        button:hover, a.button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Design: Mobile */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .slide h2 {
+                font-size: 1.3em;
+            }
+            .slide ul li {
+                font-size: 1em;
+            }
+            button, a.button {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+            .progress-indicator {
+                bottom: 60px;
+            }
+            .navigation-buttons {
+                bottom: 15px;
+                gap: 10px;
+            }
+        }
+
+        /* Responsive Design: Tablet */
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 2em;
+            }
+            .slide h2 {
+                font-size: 1.4em;
+            }
+            .slide ul li {
+                font-size: 1.1em;
+            }
+            button, a.button {
+                padding: 9px 18px;
+                font-size: 0.95em;
+            }
+        }
+.share-section {
+        margin: 0px 0; /* Add spacing between navigation and share sections */
+        text-align: center;
+    }
+
+    .share-section h2 {
+        margin-bottom: 15px;
+        font-size: 1.5em;
+    }
+
+    .share-section .button {
+        display: inline-block;
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 1em;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .share-section .button:hover {
+        background-color: #0056b3;
+    }
+    </style>
+</head>
+<body>
+    <h1>{{ wrap.title }}</h1>
+    <div id="slide-container">
+        {% for slide in wrap.content.slides %}
+            <div class="slide {% if forloop.first %}active{% endif %}">
+                <h2>{% trans slide.title %}</h2>
+                {% if slide.title == "Your Top Tracks" %}
+                    <ul>
+                        {% for track in slide.content %}
+                            <li>
+                                <strong>{{ track.name }}</strong> by {{ track.artist }}
+                                {% if track.spotify_id %}
+                                    <iframe
+                                        src="https://open.spotify.com/embed/track/{{ track.spotify_id }}"
+                                        width="300"
+                                        height="80"
+                                        frameborder="0"
+                                        allowtransparency="true"
+                                        allow="encrypted-media">
+                                    </iframe>
+                                {% else %}
+                                    <p>{% trans "No playback available for this track." %}</p>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif slide.content %}
+                    <ul>
+                        {% for item in slide.content %}
+                            {% if item|safe and item|add:"" %} {# If the item can be cast as a string #}
+                                <li>{% trans item|stringformat:"s" %}</li>
+                            {% elif item.name and item.artist %} {# Handle dictionary-like items #}
+                                <li>
+                                    <strong>{{ item.name }}</strong> by {{ item.artist }}
+                                </li>
+                            {% else %}
+                                <li>{% trans "Unsupported content format." %}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>{% trans "No data available for this slide." %}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="progress-indicator">
+        <span id="progress">1</span> / {{ wrap.content.slides|length }}
+    </div>
+    
+    <div class="navigation-buttons">
+        <button id="toggle-theme">Toggle Theme</button>
+        <button id="prev-slide">Previous</button>
+        <button id="next-slide">Next</button>
+        <a href="{% url 'home' %}" class="button">Back to Home</a>
+    </div>
+    <div class="share-section">
+    <a id="share-twitter" class="button" target="_blank">Share on X (Twitter)</a>
+    <a id="share-linkedin" class="button" target="_blank">Share on LinkedIn</a>
+    <button id="copy-to-clipboard" class="button">Copy Wrapped to Clipboard</button>
+</div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const progress = document.getElementById('progress');
+        let currentSlide = 0;
+
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index === currentSlide - 1) {
+                    slide.classList.add('previous');
+                }
+            });
+            progress.textContent = currentSlide + 1;
+        }
+
+        document.getElementById('prev-slide').addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlides();
+            }
+        });
+
+        document.getElementById('next-slide').addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlides();
+            }
+        });
+
+        updateSlides(); // Initialize
+
+        function setTheme(theme) {
+            const themeStylesheet = document.getElementById('theme-stylesheet');
+            themeStylesheet.setAttribute('href',
+                theme === 'dark' ? '{% static "music/dark.css" %}' :
+                theme === 'light' ? '{% static "music/light.css" %}' :
+                theme === 'colorful' ? '{% static "music/color.css" %}' :
+                theme === 'orange' ? '{% static "music/orange.css" %}' :
+                theme === 'red' ? '{% static "music/red.css" %}' :
+                '{% static "music/light.css" %}' // Fallback
+            );
+        }
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function checkDateForTheme() {
+            const simulatedDate = getQueryParam('date');
+            let dateKey;
+
+            if (simulatedDate) {
+                dateKey = simulatedDate; // Use simulated date from URL
+            } else {
+                const today = new Date();
+                dateKey = `${today.getMonth() + 1}-${today.getDate()}`; // Use today's date
+            }
+
+            if (dateKey === '10-31') {
+                setTheme('orange'); // Halloween
+                return true;
+            } else if (dateKey === '12-25') {
+                setTheme('red'); // Christmas
+                return true;
+            }
+
+            return false; // No special theme applied
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const specialThemeApplied = checkDateForTheme();
+            if (!specialThemeApplied) {
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                setTheme(currentTheme);
+
+                const toggleButton = document.getElementById('toggle-theme');
+                toggleButton.onclick = () => {
+                    const currentTheme = localStorage.getItem('theme') || 'light';
+                    const newTheme = currentTheme === 'dark' ? 'light' :
+                                     currentTheme === 'light' ? 'colorful' : 'dark';
+                    localStorage.setItem('theme', newTheme);
+                    setTheme(newTheme);
+                };
+            }
+        });
+document.addEventListener('DOMContentLoaded', () => {
+        const wrapTitle = "{{ wrap.title }}";
+        const slides = {{ wrap.content.slides|safe }};
+
+        const topArtistsSlide = slides.find(slide => slide.title === "Your Top Artists");
+        const topSongsSlide = slides.find(slide => slide.title === "Your Top Tracks");
+        const topGenresSlide = slides.find(slide => slide.title === "Your Top Genres");
+
+        const topArtists = topArtistsSlide ? topArtistsSlide.content.join(', ') : 'N/A';
+        const topSongs = topSongsSlide ? topSongsSlide.content.map(track => `${track.name} by ${track.artist}`).join(', ') : 'N/A';
+        const topGenres = topGenresSlide ? topGenresSlide.content.join(', ') : 'N/A';
+
+        const message = `Here is my Wrapped! 🎶\n\nTop Artists:\n${topArtists}\n\nTop Songs:\n${topSongs}\n\nTop Genres:\n${topGenres}`;
+
+        // Twitter Sharing
+        const twitterBaseUrl = "https://twitter.com/intent/tweet";
+        const twitterParams = new URLSearchParams({
+            text: message,
+            hashtags: "SpotifyWrapped,Music",
+        });
+        document.getElementById('share-twitter').href = `${twitterBaseUrl}?${twitterParams.toString()}`;
+
+        // LinkedIn Sharing (Copy-based fallback)
+        const linkedInBaseUrl = "https://www.linkedin.com/sharing/share-offsite/";
+        const linkedInParams = new URLSearchParams({
+            text: message,
+        });
+        document.getElementById('share-linkedin').href = `${linkedInBaseUrl}?${linkedInParams.toString()}`;
+
+        // Copy to Clipboard
+        document.getElementById('copy-to-clipboard').addEventListener('click', () => {
+            navigator.clipboard.writeText(message).then(() => {
+                alert('Your Wrapped summary has been copied to the clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy your Wrapped summary.');
+            });
+        });
+    });
+    </script>
+</body>
+</html>
