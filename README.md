@@ -1,4 +1,4 @@
-﻿# 🎵 Spotify Wrapped Platform: Year-Round Listening Analytics & Audio Trivia Web App
+﻿# Spotify Wrapped Platform: Year-Round Listening Analytics & Audio Trivia Web App
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-Full--Stack-092E20.svg?logo=django&logoColor=white)](https://www.djangoproject.com/)
@@ -6,22 +6,22 @@
 [![Course](https://img.shields.io/badge/Georgia%20Tech-CS%202340%20Objects%20%26%20Design-B3A369.svg)](https://www.gatech.edu/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> A full-stack web application that brings the excitement of **Spotify Wrapped** to any time of the year. Built with **Django** and the **Spotify Web API**, the platform empowers users to authenticate with their Spotify accounts, generate personalized listening summaries (both regular and holiday-themed), persist historic wraps, play an interactive audio-snippet guessing game, and toggle between multiple languages.
+A full-stack web application that brings the excitement of **Spotify Wrapped** to any time of the year. Built with **Django** and the **Spotify Web API**, the platform empowers users to authenticate with their Spotify accounts, generate personalized listening summaries (both regular and holiday-themed), persist historic wraps, play an interactive audio-snippet guessing game, and toggle between multiple languages.
 
 ---
 
-## 📌 Features
+## Features
 
-- 🎧 **On-Demand Wrapped Analytics**: Connect your Spotify account to instantly generate listening recaps covering top artists, most-streamed tracks, top genres, and acoustic profiles across customizable time frames (short, medium, long term).
-- 🎄 **Themed Wrap Experiences**: Generate specialized **Holiday Wraps** alongside standard recaps, featuring customized holiday visual themes and seasonal music filtering.
-- 💾 **Historic Wrap Persistence**: Stores generated wraps with flexible **Django JSONField** schemas, allowing users to revisit, compare, and showcase past music recaps.
-- 🕹️ **Interactive Audio Trivia Game**: Test your music knowledge with an in-browser guessing game that streams 30-second preview audio snippets directly from Spotify's CDN.
-- 🌍 **Internationalization (i18n)**: Multi-language localization infrastructure supporting dynamic language switching.
-- 🔐 **Secure Spotify OAuth 2.0**: Implements Spotify's Authorization Code flow, ensuring secure credential exchange and automatic token refreshes.
+- **On-Demand Wrapped Analytics**: Connect your Spotify account to instantly generate listening recaps covering top artists, most-streamed tracks, top genres, and acoustic profiles across customizable time frames (short, medium, long term).
+- **Themed Wrap Experiences**: Generate specialized **Holiday Wraps** alongside standard recaps, featuring customized holiday visual themes and seasonal music filtering.
+- **Historic Wrap Persistence**: Stores generated wraps with flexible **Django JSONField** schemas, allowing users to revisit, compare, and showcase past music recaps.
+- **Interactive Audio Trivia Game**: Test your music knowledge with an in-browser guessing game that streams 30-second preview audio snippets directly from Spotify's CDN.
+- **Internationalization (i18n)**: Multi-language localization infrastructure supporting dynamic language switching.
+- **Secure Spotify OAuth 2.0**: Implements Spotify's Authorization Code flow, ensuring secure credential exchange and automatic token refreshes.
 
 ---
 
-## 🏗️ Architecture & Data Flow
+## Architecture and Data Flow
 
 ```
                                  ┌─────────────────────────┐
@@ -47,7 +47,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend**: Python 3.10+, Django MVC
 - **APIs & SDKs**: Spotify Web API (REST, OAuth 2.0 Authorization Code Flow)
@@ -57,7 +57,7 @@
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```
 spotify-wrapped-project/
@@ -78,7 +78,7 @@ spotify-wrapped-project/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Prerequisites
 - Python 3.10+
@@ -129,11 +129,11 @@ python manage.py migrate
 # Launch local server
 python manage.py runserver
 ```
-Navigate to `http://127.0.0.1:8000` to log in and generate your first wrap!
+Navigate to `http://127.0.0.1:8000` to log in and generate your first wrap.
 
 ---
 
-## 👥 Credits & Academic Context
+## Academic Context and Contributions
 
 - **Course**: CS 2340 (Objects and Design) at the **Georgia Institute of Technology**.
 - **Contributors**:
