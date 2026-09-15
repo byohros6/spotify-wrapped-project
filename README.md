@@ -8,7 +8,7 @@ This project is part of the finalized portfolio naming set:
 
 - `spotify-wrapped-project` (this repository)
 - `atlanta-food-finder` — https://github.com/byohros6/atlanta-food-finder
-- `chicken-tournament-ai` (agreed portfolio repository name)
+- `chicken-tournament-ai` — https://github.com/byohros6/chicken-tournament-ai
 
 ## Source project attribution
 
